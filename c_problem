@@ -1,0 +1,76 @@
+//Nate Ramey GCU student CST-221 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+// Variables for 32 byte array
+int i, j, x, final;
+unsigned int decimal = -1, calculate;
+char bin_array [32];
+
+// Prints to Console.
+void* printMessage(char message []){
+	printf("%s", message);
+}
+
+// Read input and clears buffer.
+void* readInput(){
+	scanf("%d", &decimal);
+	while ((getchar()) != '\n');
+}
+
+// Takes user input and makes it binary.
+void* calculateBinNumber() {
+	if (decimal >= 0 && decimal < 4096){
+		unsigned int mask = 1<<31;
+		for (i = 0; i < 8; i++){
+			for (j = 0; j < 4; j++){
+				char c = (decimal & mask) == 0 ? '0' : '1';
+				bin_array[x++] = c;
+				putchar(c);
+				mask >>= 1;
+			}
+			putchar(' ');
+		}
+		putchar('\n');
+	}
+}
+
+// Converts input to hexadecimal
+void* printHexNumber(){
+	printf("%04x\n", decimal);
+}
+
+void* calculateDecNumber(){
+	printMessage("The result in binary: ");
+	calculateBinNumber();
+	printMessage("The result in hexadecimal: ");
+	printHexNumber();
+}
+
+//Shifts decimal and then adds hexadecimal then prints results
+void* calculateNumbers(){ 
+	calculate = decimal << 16;
+	final = calculate & decimal;
+	unsigned int addition = 0x07FF;
+	final = final | addition;
+	printf("The result in decimal is: %d\n", final);
+	decimal = final;
+	calculateDecNumber();
+}
+
+//user's commands prompt
+int main (void){
+	while (decimal < 0 || decimal > 4095){
+		printMessage("Pick an integer between 0 and 4095: ");
+		readInput();
+		if (decimal < 0 || decimal > 4095){
+			printMessage("Ensure number is between 0 and 4095.\n");
+		}
+  }
+	calculateDecNumber();
+	calculateNumbers();
+
+	return 0;
+}
